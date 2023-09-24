@@ -113,7 +113,8 @@ install_neovim_lazy() {
 	echo "==========================================================="
 	echo "                  Install neovim Lazy                      "
 	echo "-----------------------------------------------------------"
-	ln -s $(pwd)/nvim $HOME/.config/nvim
+	git clone git@github.com:DennisJensen95/neovim-config.git $HOME/.dotfiles/neovim-config
+	ln -s $HOME/.dotfiles/neovim-config $HOME/.config/nvim
 }
 
 # Sequence of installs
