@@ -55,7 +55,18 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # You can also set it to another string to have that shown instead of the default red dots.
 # e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
 # Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
-# COMPLETION_WArmat using the strftime function format specifications,
+# COMPLETION_WAITING_DOTS="true"
+
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# You can set one of the optional three formats:
+# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# or set a custom format using the strftime function format specifications,
 # see 'man strftime' for details.
 # HIST_STAMPS="mm/dd/yyyy"
 
@@ -72,28 +83,8 @@ plugins=(git)
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-
-alias ls="exa -la"
-alias cat=bat
-
-export PYENV_ROOT=~/.pyenv                            /Resources/bin
-
-# Hook direnv into shell
-eval "$(direnv hook zsh)"
-
-# Add github copilot CLI
-eval "$(github-copilot-cli alias -- "$0")"
-
-alias tmuxx="tmux source-file ~/.tmux.conf"
-
-# Pyenv
-export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init --path)"
-eval "$(pyenv init -)"
-
-export PATH="~/.local/bin:$PATH"
+# export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -110,15 +101,87 @@ export PATH="~/.local/bin:$PATH"
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# usITING_DOTS="true"
+# users are encouraged to define aliases within the ZSH_CUSTOM folder.
+# For a full list of active aliases, run `alias`.
+#
+# Example aliases
+# alias zshconfig="mate ~/.zshrc"
+# alias ohmyzsh="mate ~/.oh-my-zsh"
+export PATH="/opt/homebrew/bin:$PATH"
+export PATH="/Users/dennisjensen/Library/Python/3.9/bin:$PATH"
 
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# You can set one of the optional three formats:
-# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# or set a custom fo
+
+alias cat=bat
+
+export PYENV_ROOT=~/.pyenv
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init --path)"
+eval "$(pyenv init -)"
+
+export PATH="$HOME/.local/bin:$PATH"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+# Add developer binarys for xcode to path
+export PATH=$PATH:/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin
+
+# Add flutter bin to path
+export PATH="$PATH":"$HOME/.pub-cache/bin"
+
+# Add vscode to path
+export PATH=$PATH:/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin
+
+# Hook direnv into shell
+eval "$(direnv hook zsh)"
+
+# Add github copilot CLI
+eval "$(github-copilot-cli alias -- "$0")"
+
+export PATH="$PATH:/Users/dennisjensen/flutter/bin"
+export PATH="$PATH:/Users/dennisjensen/go/bin"
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/dennisjensen/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/dennisjensen/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/dennisjensen/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/dennisjensen/google-cloud-sdk/completion.zsh.inc'; fi
+
+
+# Load Angular CLI autocompletion.
+source <(ng completion script)
+
+alias tmuxx="tmux source-file ~/.tmux.conf"
+alias ls="exa -la"
+
+# fnm
+export PATH="/Users/dennisjensen/Library/Application Support/fnm:$PATH"
+eval "`fnm env`"
+eval "$(fnm env --use-on-cd)"
+
+# fnm
+export PATH="/tmp:$PATH"
+eval "`fnm env`"
+
+open_git_origin() {
+    # Get the URL of the 'origin' remote repository
+    local url=$(git remote get-url origin)
+
+    # Check if the URL is a valid HTTP/HTTPS URL
+    if [[ $url =~ ^http ]]; then
+	open $url
+    else
+        # If the URL is in SSH format (like git@github.com:username/repo.git), 
+        # convert it to HTTP format
+        url=$(echo "$url" | sed -E 's/git@([^:]+):/https:\/\/\1\//')
+
+        # Open the converted URL
+        open "$url"
+    fi
+}
+
+
