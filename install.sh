@@ -1,17 +1,10 @@
 #!/bin/bash
 
-update() {
-	echo "==========================================================="
-	echo "             Installing tmux                               "
-	echo "-----------------------------------------------------------"
-	sudo apt-get update -y
-}
-
 install_tmux() {
 	echo "==========================================================="
 	echo "             Installing tmux                               "
 	echo "-----------------------------------------------------------"
-	sudo apt-get install tmux -y
+	brew install tmux
 }
 
 configure_tmux() {
@@ -21,6 +14,13 @@ configure_tmux() {
 	cat .tmux.conf >$HOME/.tmux.conf
 }
 
+install_zshrc() {
+	echo "==========================================================="
+	echo "                  Import zshrc                             "
+	echo "-----------------------------------------------------------"
+	cat .zshrc >$HOME/.zshrc
+}
+
 install_pyenv() {
 	echo "==========================================================="
 	echo "             Installing pyenv                              "
@@ -28,27 +28,11 @@ install_pyenv() {
 	curl https://pyenv.run | bash
 }
 
-install_zshrc() {
-	echo "==========================================================="
-	echo "             cloning zsh-autosuggestions                   "
-	echo "-----------------------------------------------------------"
-	git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-	echo "==========================================================="
-	echo "                 cloning zsh-zsh-nvm                       "
-	echo "-----------------------------------------------------------"
-	git clone https://github.com/lukechilds/zsh-nvm ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-nvm
-	echo "==========================================================="
-	echo "                  Import zshrc                             "
-	echo "-----------------------------------------------------------"
-	cat .zshrc >$HOME/.zshrc
-}
-
 install_rust() {
 	echo "==========================================================="
 	echo "                  Installing rust                          "
 	echo "-----------------------------------------------------------"
 	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-
 }
 
 install_nix() {
@@ -91,22 +75,15 @@ install_bat() {
 	echo "==========================================================="
 	echo "                  Installing bat                           "
 	echo "-----------------------------------------------------------"
-	sudo apt-get install bat -y
-	ln -s /usr/bin/batcat ~/.local/bin/bat
+	brew install bat
+	cat "alias cat='bat'" >>$HOME/.zshrc
 }
 
 install_exa() {
 	echo "==========================================================="
 	echo "                  Installing exa                           "
 	echo "-----------------------------------------------------------"
-	zsh -c "$HOME/.nix-profile/bin/nix-env -iA nixpkgs.exa"
-}
-
-install_github_copilot_cli() {
-	echo "==========================================================="
-	echo "                  Installing copilot-cli                   "
-	echo "-----------------------------------------------------------"
-	npm install -g @githubnext/github-copilot-cli
+	zsh -c "$HOME/.nix-profile/bin/nix-env -iA nixpkgs.eza"
 }
 
 install_neovim_lazy() {
@@ -117,8 +94,12 @@ install_neovim_lazy() {
 	ln -s $HOME/.dotfiles/neovim-config $HOME/.config/nvim
 }
 
-# Sequence of installs
-update
+install_nvm() {
+	echo "==========================================================="
+	echo "                  Install nvm                              "
+	echo "-----------------------------------------------------------"
+	brew install nvm
+}
 
 # Tmux install and setup
 install_tmux
@@ -139,5 +120,4 @@ install_rust
 install_poetry
 install_bat
 install_exa
-install_github_copilot_cli
 install_neovim_lazy
