@@ -37,3 +37,19 @@ open_git_origin() {
         open "$url"
     fi
 }
+
+open_github_actions() {
+    local url=$(git remote get-url origin)
+    if [[ $url =~ ^http ]]; then
+        open $url/actions
+    else
+        # If the URL is in SSH format (like git@github.com:username/repo.git),
+        # convert it to HTTP format
+    url=$(echo "$url" | sed -E 's/git@([^:]+):/https:\/\/\1\//' | sed 's/\.git$//')
+
+        # Open the converted URL
+        open "$url/actions"
+    fi
+}
+
+alias co="gh copilot suggest $@"
